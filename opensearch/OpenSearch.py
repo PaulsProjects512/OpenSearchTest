@@ -3,7 +3,8 @@ from opensearchpy import OpenSearch
 
 host = 'localhost'
 port = 9200
-auth = ('admin', 'Abcdefgh1')
+#auth = ('admin', 'Abcdefgh1')
+auth = ('admin', 'admin')
 
 # Create the client with SSL/TLS and hostname verification disabled.
 client = OpenSearch(

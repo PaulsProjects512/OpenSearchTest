@@ -3,6 +3,7 @@ import certifi
 from io import BytesIO
 import json
 
+# Use dictionaries with the DOI or similar as the key.
 authorsName = []
 institutionNames = []
 publications = []
@@ -32,8 +33,7 @@ def readURL(url):
 def getTheme(jsonData):
     data = json.loads(jsonData)
     for item in data:
-        name = str(item["name"]) + ", " + str(item["url"])
-        themes.append(name)
+        themes.append(dict(item))
 
 def extractThemes(printout=False):
     url = 'http://cdi.ukcatalysishub.org/themes.json'
@@ -48,8 +48,7 @@ def extractThemes(printout=False):
 def getPublications(jsonData):
     data = json.loads(jsonData)
     for item in data:
-        name = str(item["title"]) + ", " + str(item["link"]) + ", " + str(item["doi"]) + ", " + str(item["pub_print_year"])
-        publications.append(name)
+        publications.append(dict(item))
 
 def extractPublications():
     pageNumber = 1
@@ -62,7 +61,7 @@ def extractPublications():
 
         pageNumber = pageNumber + 1
 
-        if json == "[]":
+        if json == "[]": # or json.find('404') > -1:
             # Terminate the page reader on an empty reply.
             keepTrying = False
 
@@ -70,8 +69,7 @@ def extractPublications():
 def getInstitutions(jsonData):
     data = json.loads(jsonData)
     for item in data:
-        name = item["institution"]
-        institutionNames.append(name)
+        institutionNames.append(dict(item))
 
 def extractInstitutions():
     pageNumber = 1
@@ -84,7 +82,7 @@ def extractInstitutions():
 
         pageNumber = pageNumber + 1
 
-        if json == "[]":
+        if json == "[]":  # or json.find('404') > -1:
             # Terminate the page reader on an empty reply.
             keepTrying = False
 
@@ -92,8 +90,7 @@ def extractInstitutions():
 def getAuthors(jsonData):
     data = json.loads(jsonData)
     for item in data:
-        fullName = item["given_name"] + ", " + item["last_name"] + ", " + item["orcid"]
-        authorsName.append(fullName)
+        authorsName.append(dict(item))
 
 '''
 Py curl method of read Catalysis UK publications database.
@@ -109,7 +106,7 @@ def extractAuthorsFromWebservice():
 
         pageNumber = pageNumber + 1
 
-        if json == "[]":
+        if json == "[]": # or json.find('404') > -1:
             # Terminate the page reader on an empty reply.
             keepTrying = False
 
@@ -124,18 +121,14 @@ def extractDataObjects():
 
         pageNumber = pageNumber + 1
 
-        if json == "[]" or pageNumber > 10:
+        if json == "[]" or pageNumber > 10: # or json.find('404') > -1:
             # Terminate the page reader on an empty reply.
             keepTrying = False
 
 def getDataObjects(jsonData):
     data = json.loads(jsonData)
     for item in data:
-        d1 = item["dataset_description"]
-        d2 = item["dataset_doi"]
-        d3 = item["dataset_location"]
-        dataObjectName = str(item["dataset_description"]) + ", " + str(item["dataset_doi"]) + ", " + item["dataset_location"]
-        dataObjects.append(dataObjectName)
+        dataObjects.append(dict(item))
 
 # data object list reading.
 def extractAuthorsFromWebservice():
@@ -146,12 +139,13 @@ def extractAuthorsFromWebservice():
 
         json = readURL(url)
         getAuthors(json)
-
         pageNumber = pageNumber + 1
 
-        if json == "[]":
+        if json == "[]": # or json.find('404') > -1:
             # Terminate the page reader on an empty reply.
             keepTrying = False
+            keepTrying = False
+
 
 #============================================================
 # Run the loading process.
@@ -170,4 +164,3 @@ print("number of publications = ", len(publications))
 
 extractDataObjects()
 print("number of data objects = ", len(dataObjects))
-
