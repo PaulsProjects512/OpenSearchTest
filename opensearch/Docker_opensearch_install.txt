@@ -1,0 +1,33 @@
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
+# Installing docker.
+
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-cache policy docker-ce
+sudo apt install docker-ce
+sudo systemctl status docker
+
+docker run hello-world
+docker images
+
+docker run -it hello-world
+
+# docker example commands.
+docker ps -a
+docker ps -l
+docker start 1c08a7a0d0e4
+docker stop <instance>
+docker rm <instance>
+
+# https://opensearch.org/docs/latest/install-and-configure/install-opensearch/docker/
+# Installing docker.
+docker pull opensearchproject/opensearch:2
+docker pull opensearchproject/opensearch-dashboards:2
+
+# single instance - simple
+docker run -d -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" opensearchproject/opensearch:latest
+
+# Passworded
+docker run -d -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>" opensearchproject/opensearch:latest
